@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: cesmusic
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cesmusic_db?useTimezone=true&serverTimezone=UTC # url database
+    username: developer
+    password: 123456
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: false
