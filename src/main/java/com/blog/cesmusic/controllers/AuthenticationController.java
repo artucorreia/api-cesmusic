@@ -39,9 +39,9 @@ public class AuthenticationController {
                 new UsernamePasswordAuthenticationToken(data.getLogin(), data.getPassword());
         Authentication auth = authenticationManager.authenticate(usernamePassword);
 
-        String token = tokenService.generateToken((User) auth.getPrincipal());
+        TokenDTO token = tokenService.generateToken((User) auth.getPrincipal());
 
-        return ResponseEntity.ok(new TokenDTO(token));
+        return ResponseEntity.ok(token);
     }
 
     @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
