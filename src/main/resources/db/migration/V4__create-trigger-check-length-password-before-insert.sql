@@ -3,6 +3,6 @@ BEFORE INSERT ON `USERS`
 FOR EACH ROW
 BEGIN
     IF CHAR_LENGTH(NEW.PASSWORD) < 8 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Password must be longer than 7 characters';
+        SIGNAL SQLSTATE '45003' SET MESSAGE_TEXT = 'Password must be longer than 7 characters';
     END IF;
 END;

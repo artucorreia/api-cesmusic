@@ -3,6 +3,6 @@ BEFORE UPDATE ON `USERS`
 FOR EACH ROW
 BEGIN
     IF CHAR_LENGTH(NEW.LOGIN) < 6 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Login must be longer than 5 characters';
+        SIGNAL SQLSTATE '45001' SET MESSAGE_TEXT = 'Login must be longer than 5 characters';
     END IF;
 END;

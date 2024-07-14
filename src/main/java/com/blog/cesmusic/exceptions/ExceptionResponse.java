@@ -6,12 +6,12 @@ import java.time.LocalDateTime;
 public class ExceptionResponse implements Serializable {
     private LocalDateTime timestamp;
     private String message;
-    private String description;
+    private String details;
 
-    public ExceptionResponse(LocalDateTime timestamp, String message, String description) {
+    public ExceptionResponse(LocalDateTime timestamp, String message, String details) {
         this.timestamp = timestamp;
         this.message = message;
-        this.description = description;
+        this.details = details;
     }
 
     public LocalDateTime getTimestamp() {
@@ -23,6 +23,6 @@ public class ExceptionResponse implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return details;
     }
 }

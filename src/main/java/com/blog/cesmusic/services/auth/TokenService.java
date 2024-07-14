@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.blog.cesmusic.data.DTO.v1.auth.TokenDTO;
+import com.blog.cesmusic.exceptions.auth.JwtCreationTokenException;
 import com.blog.cesmusic.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class TokenService {
             return new TokenDTO(user.getLogin(), token, created, expiration);
         }
         catch (JWTCreationException e) {
-            throw new RuntimeException("Error while generating a token", e);
+            throw new JwtCreationTokenException("Error while generating a token");
         }
     }
 

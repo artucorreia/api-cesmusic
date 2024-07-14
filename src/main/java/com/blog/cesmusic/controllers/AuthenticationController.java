@@ -3,10 +3,13 @@ package com.blog.cesmusic.controllers;
 import com.blog.cesmusic.data.DTO.v1.auth.AuthenticationDTO;
 import com.blog.cesmusic.data.DTO.v1.auth.RegisterDTO;
 import com.blog.cesmusic.data.DTO.v1.auth.TokenDTO;
+import com.blog.cesmusic.data.DTO.v1.auth.UserResponseDTO;
+import com.blog.cesmusic.exceptions.auth.LoginAlreadyUsedException;
 import com.blog.cesmusic.model.User;
 import com.blog.cesmusic.services.auth.TokenService;
 import com.blog.cesmusic.services.auth.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,11 +52,11 @@ public class AuthenticationController {
             value = "/register",
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<?> register(@RequestBody RegisterDTO data) {
-        if (userService.findByLogin(data.getLogin()) != null) return ResponseEntity.badRequest().build();
+    public ResponseEntity<UserResponseDTO> register(@RequestBody RegisterDTO data) {
+        if (userService.findByLogin(data.getLogin()) != null) throw new LoginAlreadyUsedException("Login already in use");
 
-        userService.register(data);
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(userService.register(data));
     }
 }
