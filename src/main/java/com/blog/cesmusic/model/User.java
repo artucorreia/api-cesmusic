@@ -18,6 +18,9 @@ public class User implements UserDetails, Serializable {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(name = "FULL_NAME", length = 150, nullable = false)
+    private String fullName;
+
     @Column(name = "LOGIN", length = 100, nullable = false, unique = true)
     private String login;
 
@@ -29,14 +32,16 @@ public class User implements UserDetails, Serializable {
 
     public User() {}
 
-    public User(UUID id, String login, String password, Role role) {
+    public User(UUID id, String fullName, String login, String password, Role role) {
         this.id = id;
+        this.fullName = fullName;
         this.login = login;
         this.password = password;
         this.role = role;
     }
 
-    public User(String login, String password, Role role) {
+    public User(String fullName, String login, String password, Role role) {
+        this.fullName = fullName;
         this.login = login;
         this.password = password;
         this.role = role;
@@ -85,6 +90,14 @@ public class User implements UserDetails, Serializable {
         this.id = id;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     public String getLogin() {
         return login;
     }
@@ -111,6 +124,7 @@ public class User implements UserDetails, Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return Objects.equals(id, user.id)
+                && Objects.equals(fullName, user.fullName)
                 && Objects.equals(login, user.login)
                 && Objects.equals(password, user.password)
                 && role == user.role;
@@ -118,6 +132,6 @@ public class User implements UserDetails, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, password, role);
+        return Objects.hash(id, fullName, login, password, role);
     }
 }

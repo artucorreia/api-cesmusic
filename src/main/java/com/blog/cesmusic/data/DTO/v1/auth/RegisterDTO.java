@@ -4,16 +4,27 @@ import com.blog.cesmusic.model.Role;
 
 public class RegisterDTO {
 
+    private String fullName;
+
     private String login;
 
     private String password;
 
     private Role role;
 
-    public RegisterDTO(String login, String password, Role role) {
+    public RegisterDTO(String fullName, String login, String password, Role role) {
+        this.fullName = fullName;
         this.login = login;
         this.password = password;
         this.role = role;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getLogin() {

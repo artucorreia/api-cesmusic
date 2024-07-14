@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public class UserResponseDTO {
     private UUID id;
+    private String fullName;
     private String login;
     private Role role;
     private Boolean enabled;
@@ -14,8 +15,9 @@ public class UserResponseDTO {
 
     public UserResponseDTO() {}
 
-    public UserResponseDTO(UUID id, String login, Role role, Boolean enabled, Set<String> authorities) {
+    public UserResponseDTO(UUID id, String fullName, String login, Role role, Boolean enabled, Set<String> authorities) {
         this.id = id;
+        this.fullName = fullName;
         this.login = login;
         this.role = role;
         this.enabled = enabled;
@@ -28,6 +30,14 @@ public class UserResponseDTO {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getLogin() {
