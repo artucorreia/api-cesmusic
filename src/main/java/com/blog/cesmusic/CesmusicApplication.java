@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		@Info(
 				title = "API Cesmusic",
 				version = "v1",
-				description = "API REST Full utilizada para o projeto Cesmusic",
+				description = "API REST utilizada para um projeto de blog musical denominado Cesmusic",
 				license = @License(
 						name = "Apache 2.0",
 						url = "https://www.apache.org/licenses/LICENSE-2.0"

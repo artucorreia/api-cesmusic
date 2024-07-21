@@ -5,7 +5,7 @@ import com.blog.cesmusic.model.Role;
 import java.util.Set;
 import java.util.UUID;
 
-public class UserResponseDTO {
+public class UserDTO {
     private UUID id;
     private String fullName;
     private String login;
@@ -13,9 +13,9 @@ public class UserResponseDTO {
     private Boolean enabled;
     private Set<String> authorities;
 
-    public UserResponseDTO() {}
+    public UserDTO() {}
 
-    public UserResponseDTO(UUID id, String fullName, String login, Role role, Boolean enabled, Set<String> authorities) {
+    public UserDTO(UUID id, String fullName, String login, Role role, Boolean enabled, Set<String> authorities) {
         this.id = id;
         this.fullName = fullName;
         this.login = login;
@@ -70,5 +70,17 @@ public class UserResponseDTO {
 
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", login='" + login + '\'' +
+                ", role=" + role +
+                ", enabled=" + enabled +
+                ", authorities=" + authorities +
+                '}';
     }
 }

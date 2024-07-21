@@ -30,11 +30,13 @@ public class SecurityConfigurations {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers(HttpMethod.POST, "api/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "api/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "api/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "api/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/auth/register").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/users/pending").hasRole("ADMIN")
+//                                .requestMatchers(HttpMethod.GET, "api/**").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "/auth/accept/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()

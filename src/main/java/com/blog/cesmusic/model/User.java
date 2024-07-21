@@ -18,10 +18,10 @@ public class User implements UserDetails, Serializable {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "FULL_NAME", length = 150, nullable = false)
+    @Column(name = "FULL_NAME", length = 100, nullable = false)
     private String fullName;
 
-    @Column(name = "LOGIN", length = 100, nullable = false, unique = true)
+    @Column(name = "LOGIN", length = 50, nullable = false, unique = true)
     private String login;
 
     @Column(name = "PASSWORD", length = 100, nullable = false)
@@ -49,7 +49,8 @@ public class User implements UserDetails, Serializable {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        if (role == Role.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        return List.of(new SimpleGrantedAuthority("ROLE_PENDING"));
     }
 
     @Override

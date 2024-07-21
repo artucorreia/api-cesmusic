@@ -3,8 +3,7 @@ package com.blog.cesmusic.controllers;
 import com.blog.cesmusic.data.DTO.v1.auth.AuthenticationDTO;
 import com.blog.cesmusic.data.DTO.v1.auth.RegisterDTO;
 import com.blog.cesmusic.data.DTO.v1.auth.TokenDTO;
-import com.blog.cesmusic.data.DTO.v1.auth.UserResponseDTO;
-import com.blog.cesmusic.exceptions.auth.LoginAlreadyUsedException;
+import com.blog.cesmusic.data.DTO.v1.auth.UserDTO;
 import com.blog.cesmusic.model.User;
 import com.blog.cesmusic.services.auth.TokenService;
 import com.blog.cesmusic.services.auth.UserService;
@@ -60,18 +59,15 @@ public class AuthenticationController {
                                     schema = @Schema(implementation = TokenDTO.class)
                             )
                     ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Bad Request", content = @Content
-                    ),
-                    @ApiResponse(
-                            responseCode = "403", description = "Forbidden", content = @Content
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Internal Error", content = @Content
-                    )
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+                    @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
             }
     )
     public ResponseEntity<TokenDTO> login(@RequestBody AuthenticationDTO data) {
+        userService.verifyPendingUser(data);
+
         UsernamePasswordAuthenticationToken usernamePassword =
                 new UsernamePasswordAuthenticationToken(data.getLogin(), data.getPassword());
         Authentication auth = authenticationManager.authenticate(usernamePassword);
@@ -84,7 +80,8 @@ public class AuthenticationController {
     @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
     @PostMapping(
             value = "/register",
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     @Operation(
             summary = "Register in the system",
@@ -99,25 +96,70 @@ public class AuthenticationController {
                             description = "Created",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = UserResponseDTO.class)
+                                    schema = @Schema(implementation = UserDTO.class)
                             )
                     ),
-                    @ApiResponse(
-                            responseCode = "400", description = "Bad Request", content = @Content
-                    ),
-                    @ApiResponse(
-                            responseCode = "403", description = "Forbidden", content = @Content
-                    ),
-                    @ApiResponse(
-                            responseCode = "500", description = "Internal Error", content = @Content
-                    )
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+                    @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
             }
     )
-    public ResponseEntity<UserResponseDTO> register(@RequestBody RegisterDTO data) {
-        if (userService.findByLogin(data.getLogin()) != null) throw new LoginAlreadyUsedException("Login already in use");
-
+    public ResponseEntity<UserDTO> register(@RequestBody RegisterDTO data) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(userService.register(data));
+    }
+
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
+    @PutMapping(
+            value = "/accept/{login}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(
+            summary = "Accept a new user",
+            description = "Accept a new user",
+            tags = {"Authentication"},
+            method = "GET"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = UserDTO.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+                    @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content),
+            }
+    )
+    public ResponseEntity<UserDTO> acceptUser(@PathVariable String login) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.acceptUser(login));
+    }
+
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
+    @DeleteMapping(value = "/recuse/{login}")
+    @Operation(
+            summary = "Recuse a new user",
+            description = "Recuse a new user",
+            tags = {"Authentication"},
+            method = "DELETE"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "204", description = "No Content", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+                    @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content),
+            }
+    )
+    public ResponseEntity<?> recuseUser(@PathVariable String login) {
+        userService.recuseUser(login);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

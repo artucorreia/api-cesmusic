@@ -1,7 +1,5 @@
 package com.blog.cesmusic.data.DTO.v1.auth;
 
-import com.blog.cesmusic.model.Role;
-
 public class RegisterDTO {
 
     private String fullName;
@@ -10,13 +8,13 @@ public class RegisterDTO {
 
     private String password;
 
-    private Role role;
+//    private Role role;
 
-    public RegisterDTO(String fullName, String login, String password, Role role) {
+    public RegisterDTO(String fullName, String login, String password) {
         this.fullName = fullName;
         this.login = login;
         this.password = password;
-        this.role = role;
+//        this.role = role;
     }
 
     public String getFullName() {
@@ -43,11 +41,11 @@ public class RegisterDTO {
         this.password = password;
     }
 
-    public Role getRole() {
-        return role;
-    }
+//    public Role getRole() {
+//        return role;
+//    }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
+//    public void setRole(Role role) {
+//        this.role = role;
+//    }
 }
