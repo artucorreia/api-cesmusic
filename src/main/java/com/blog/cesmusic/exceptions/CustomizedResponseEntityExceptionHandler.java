@@ -1,6 +1,8 @@
 package com.blog.cesmusic.exceptions;
 
 import com.blog.cesmusic.exceptions.auth.*;
+import com.blog.cesmusic.exceptions.general.EmptyDataException;
+import com.blog.cesmusic.exceptions.general.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -28,6 +30,32 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleResourceNotFoundExceptions(
+            Exception exception,
+            WebRequest request
+    ) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EmptyDataException.class)
+    public final ResponseEntity<ExceptionResponse> handleEmptyDataExceptions(
+            Exception exception,
+            WebRequest request
+    ) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(JwtCreationTokenException.class)
     public final ResponseEntity<ExceptionResponse> handleJwtExceptions(
             Exception exception,
@@ -52,6 +80,19 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
                 request.getDescription(false)
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(InvalidEmailException.class)
+    public final ResponseEntity<ExceptionResponse> handleInvalidLoginExceptions(
+            Exception exception,
+            WebRequest request
+    ) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(LoginAlreadyUsedException.class)
@@ -119,7 +160,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UserAlreadyIsAdministratorException.class)
+    @ExceptionHandler(UserIsAlreadyActiveException.class)
     public final ResponseEntity<ExceptionResponse> handleUserAlreadyIsAdministratorExceptions(
             Exception exception,
             WebRequest request

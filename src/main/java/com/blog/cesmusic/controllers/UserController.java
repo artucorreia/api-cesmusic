@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users")
-@Tag(name = "User", description = "Endpoints for manager users")
+@Tag(name = "User", description = "Endpoints to manager users")
 public class UserController {
 
     @Autowired
@@ -26,12 +26,12 @@ public class UserController {
 
     @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
     @GetMapping(
-            value = "/pending",
+            value = "/inactive",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @Operation(
-            summary = "Find all pending users",
-            description = "Find all pending users",
+            summary = "Find all inactive users",
+            description = "Find all inactive users",
             tags = {"User"},
             method = "GET"
     )
@@ -46,13 +46,14 @@ public class UserController {
                             )
                     ),
                     @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
                     @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
                     @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
             }
     )
-    public ResponseEntity<List<UserDTO>> findUsersPending() {
+    public ResponseEntity<List<UserDTO>> findInactiveUsers() {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findAll());
+                .body(service.findInactiveUsers());
     }
 }

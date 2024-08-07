@@ -10,18 +10,18 @@ public class UserDTO {
     private String fullName;
     private String login;
     private Role role;
-    private Boolean enabled;
-    private Set<String> authorities;
+    private String about;
+    private Boolean active;
 
     public UserDTO() {}
 
-    public UserDTO(UUID id, String fullName, String login, Role role, Boolean enabled, Set<String> authorities) {
+    public UserDTO(UUID id, String fullName, String login, Role role, String about, Boolean active) {
         this.id = id;
         this.fullName = fullName;
         this.login = login;
         this.role = role;
-        this.enabled = enabled;
-        this.authorities = authorities;
+        this.about = about;
+        this.active = active;
     }
 
     public UUID getId() {
@@ -56,31 +56,19 @@ public class UserDTO {
         this.role = role;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
+    public Boolean getActive() {
+        return active;
     }
 
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
-    public Set<String> getAuthorities() {
-        return authorities;
+    public String getAbout() {
+        return about;
     }
 
-    public void setAuthorities(Set<String> authorities) {
-        this.authorities = authorities;
-    }
-
-    @Override
-    public String toString() {
-        return "UserDTO{" +
-                "id=" + id +
-                ", fullName='" + fullName + '\'' +
-                ", login='" + login + '\'' +
-                ", role=" + role +
-                ", enabled=" + enabled +
-                ", authorities=" + authorities +
-                '}';
+    public void setAbout(String about) {
+        this.about = about;
     }
 }

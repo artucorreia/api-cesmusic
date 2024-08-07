@@ -3,7 +3,6 @@ package com.blog.cesmusic.data.DTO.v1.auth;
 public class AuthenticationDTO {
 
     private String login;
-
     private String password;
 
     public AuthenticationDTO(String login, String password) {

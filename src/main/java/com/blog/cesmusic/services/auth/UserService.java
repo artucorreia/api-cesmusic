@@ -8,6 +8,7 @@ import com.blog.cesmusic.mapper.Mapper;
 import com.blog.cesmusic.model.Role;
 import com.blog.cesmusic.model.User;
 import com.blog.cesmusic.repositories.UserRepository;
+import com.blog.cesmusic.services.EmailValidatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,11 +28,12 @@ public class UserService {
 
     public void verifyPendingUser(AuthenticationDTO data) {
         User user = Mapper.parseObject(findByLogin(data.getLogin()), User.class);
-        if (user.getRole() != Role.ADMIN) throw new PendingUserException("User is pending");
+        if (!user.getActive()) throw new PendingUserException("User is inactive");
     }
 
     public UserDTO register(RegisterDTO data) {
         if (findByLogin(data.getLogin()) != null) throw new LoginAlreadyUsedException("Login already in use");
+        if (!EmailValidatorService.isValid(data.getLogin())) throw new InvalidEmailException("Login must be valid");
         if (!loginLengthIsValid(data.getLogin())) throw new LoginLengthException("Login must be 6 characters or more");
         if (!passwordLengthIsValid(data.getPassword())) throw new PasswordLengthException("Password must be 8 or more characters");
         if (!fullNameNonNull(data.getFullName())) throw new FullNameNullException("Name can not be null");
@@ -42,7 +44,7 @@ public class UserService {
 
         return Mapper.parseObject(
                 repository.save(
-                        new User(name, data.getLogin(), passwordEncoder, Role.PENDING)
+                        new User(name, data.getLogin(), passwordEncoder, Role.USER, data.getAbout(),false)
                 ),
                 UserDTO.class
         );
@@ -51,9 +53,9 @@ public class UserService {
     public UserDTO acceptUser(String login) {
         User user = Mapper.parseObject(findByLogin(login), User.class);
 
-        if (user.getRole() == Role.ADMIN) throw new UserAlreadyIsAdministratorException("User is already an administrator");
+        if (user.getActive()) throw new UserIsAlreadyActiveException("User is already active");
 
-        user.setRole(Role.ADMIN);
+        user.setActive(true);
 
         return Mapper.parseObject(
                 repository.save(user),
@@ -64,14 +66,14 @@ public class UserService {
     public void recuseUser(String login) {
         User user = Mapper.parseObject(findByLogin(login), User.class);
 
-        if (user.getRole() == Role.ADMIN) throw new UserAlreadyIsAdministratorException("User is already an administrator");
+        if (user.getActive()) throw new UserIsAlreadyActiveException("User is already active");
 
         repository.delete(user);
     }
 
-    public List<UserDTO> findAll() {
+    public List<UserDTO> findInactiveUsers() {
         return Mapper.parseListObjects(
-                repository.findUsersPending(),
+                repository.findInactiveUsers(),
                 UserDTO.class
         );
     }

@@ -30,14 +30,27 @@ public class SecurityConfigurations {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/api/v1/users/pending").hasRole("ADMIN")
-//                                .requestMatchers(HttpMethod.GET, "api/**").permitAll()
+                                // general
+                                .requestMatchers(HttpMethod.POST, "/api/v1/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/v1/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/v1/**").hasRole("ADMIN")
+
+                                // auth
                                 .requestMatchers(HttpMethod.PUT, "/auth/accept/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/auth/recuse/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+
+                                // users
+                                .requestMatchers(HttpMethod.GET, "/api/v1/users/pending").hasRole("ADMIN")
+
+                                // tags
+                                .requestMatchers(HttpMethod.GET, "/api/v1/tags/**").permitAll()
+
+                                // posts
+                                .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
+
+                                // swagger
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/swagger-ui.html").permitAll()

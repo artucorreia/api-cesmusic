@@ -2,7 +2,7 @@ package com.blog.cesmusic.model;
 
 public enum Role {
     ADMIN("admin"),
-    PENDING("pending");
+    USER("user");
 
     private String role;
 
