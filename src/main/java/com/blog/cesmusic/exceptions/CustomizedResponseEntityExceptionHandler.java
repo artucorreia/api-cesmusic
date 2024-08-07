@@ -3,6 +3,7 @@ package com.blog.cesmusic.exceptions;
 import com.blog.cesmusic.exceptions.auth.*;
 import com.blog.cesmusic.exceptions.general.EmptyDataException;
 import com.blog.cesmusic.exceptions.general.ResourceNotFoundException;
+import com.blog.cesmusic.exceptions.mail.MailSendingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -45,6 +46,19 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     @ExceptionHandler(EmptyDataException.class)
     public final ResponseEntity<ExceptionResponse> handleEmptyDataExceptions(
+            Exception exception,
+            WebRequest request
+    ) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MailSendingException.class)
+    public final ResponseEntity<ExceptionResponse> handleMailSendingExceptions(
             Exception exception,
             WebRequest request
     ) {
@@ -147,8 +161,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(FullNameNullException.class)
-    public final ResponseEntity<ExceptionResponse> handleFullNameNullExceptions(
+    @ExceptionHandler(AboutLengthException.class)
+    public final ResponseEntity<ExceptionResponse> handleAboutLengthExceptions(
             Exception exception,
             WebRequest request
     ) {

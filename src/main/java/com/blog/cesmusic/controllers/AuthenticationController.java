@@ -141,25 +141,4 @@ public class AuthenticationController {
                 .status(HttpStatus.OK)
                 .body(userService.acceptUser(login));
     }
-
-    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
-    @DeleteMapping(value = "/recuse/{login}")
-    @Operation(
-            summary = "Recuse a new user",
-            description = "Recuse a new user",
-            tags = {"Authentication"},
-            method = "DELETE"
-    )
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "204", description = "No Content", content = @Content),
-                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
-                    @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
-                    @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content),
-            }
-    )
-    public ResponseEntity<?> recuseUser(@PathVariable String login) {
-        userService.recuseUser(login);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
 }

@@ -15,6 +15,20 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: false
+  mail:
+    host: sandbox.smtp.mailtrap.io
+#    host: smtp.gmail.com
+    port: 587
+    username: 9828be330a608c
+#    username: cesmusic.blog@gmail.com
+    password: b3a10d9b4a75b6
+#    password: urfm gmoi umvo enaw
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 spring-doc:
   pathsToMatch:
     - /auth/**

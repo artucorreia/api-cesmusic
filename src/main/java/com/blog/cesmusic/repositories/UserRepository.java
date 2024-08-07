@@ -19,4 +19,10 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             value = "SELECT * FROM USERS U WHERE U.`ACTIVE` = 0"
     )
     List<User> findInactiveUsers();
+
+    @Query(
+            nativeQuery = true,
+            value = "SELECT U.`LOGIN` FROM USERS U WHERE U.`ROLE` = 'ADMIN'"
+    )
+    List<String> findAdminsLogin();
 }

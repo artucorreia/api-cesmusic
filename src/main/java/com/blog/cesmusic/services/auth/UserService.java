@@ -8,7 +8,8 @@ import com.blog.cesmusic.mapper.Mapper;
 import com.blog.cesmusic.model.Role;
 import com.blog.cesmusic.model.User;
 import com.blog.cesmusic.repositories.UserRepository;
-import com.blog.cesmusic.services.EmailValidatorService;
+import com.blog.cesmusic.services.MailValidatorService;
+import com.blog.cesmusic.services.mail.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +23,9 @@ public class UserService {
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private MailService mailService;
+
     public UserDetails findByLogin(String login) {
         return repository.findByLogin(login);
     }
@@ -32,20 +36,22 @@ public class UserService {
     }
 
     public UserDTO register(RegisterDTO data) {
-        if (findByLogin(data.getLogin()) != null) throw new LoginAlreadyUsedException("Login already in use");
-        if (!EmailValidatorService.isValid(data.getLogin())) throw new InvalidEmailException("Login must be valid");
-        if (!loginLengthIsValid(data.getLogin())) throw new LoginLengthException("Login must be 6 characters or more");
-        if (!passwordLengthIsValid(data.getPassword())) throw new PasswordLengthException("Password must be 8 or more characters");
-        if (!fullNameNonNull(data.getFullName())) throw new FullNameNullException("Name can not be null");
-        if (!fullNameLengthIsValid(data.getFullName())) throw new FullNameLengthException("Name must be 5 or more characters");
+        validateData(data);
 
         String passwordEncoder = new BCryptPasswordEncoder().encode(data.getPassword());
-        String name = capitalizeName(data.getFullName());
+        User entity = new User(
+                data.getFullName().toUpperCase().trim(),
+                data.getLogin(),
+                passwordEncoder,
+                Role.USER,
+                data.getAbout(),
+                false
+        );
+
+        sendMails(Mapper.parseObject(entity, UserDTO.class));
 
         return Mapper.parseObject(
-                repository.save(
-                        new User(name, data.getLogin(), passwordEncoder, Role.USER, data.getAbout(),false)
-                ),
+                repository.save(entity),
                 UserDTO.class
         );
     }
@@ -63,14 +69,6 @@ public class UserService {
         );
     }
 
-    public void recuseUser(String login) {
-        User user = Mapper.parseObject(findByLogin(login), User.class);
-
-        if (user.getActive()) throw new UserIsAlreadyActiveException("User is already active");
-
-        repository.delete(user);
-    }
-
     public List<UserDTO> findInactiveUsers() {
         return Mapper.parseListObjects(
                 repository.findInactiveUsers(),
@@ -78,21 +76,25 @@ public class UserService {
         );
     }
 
-    private Boolean loginLengthIsValid(String login) {
-        return login.length() >= 6;
+    private void sendMails(UserDTO user) {
+        for (String login : repository.findAdminsLogin()) {
+            mailService.sendNewUserMail(user, login);
+        }
     }
 
-    private Boolean fullNameNonNull(String name) {return name != null;}
+    // data validations
+    private void validateData(RegisterDTO data) {
+        if (findByLogin(data.getLogin()) != null) throw new LoginAlreadyUsedException("Login already in use");
+        if (!MailValidatorService.isValid(data.getLogin())) throw new InvalidEmailException("Login must be valid");
 
-    private Boolean fullNameLengthIsValid(String name) {
-        return name.length() >= 5;
+        // validate data length
+        if (!dataLengthIsValid(data.getLogin()   , 6)) throw new LoginLengthException("Login must be 6 characters or more");
+        if (!dataLengthIsValid(data.getPassword(), 8)) throw new PasswordLengthException("Password must be 8 or more characters");
+        if (!dataLengthIsValid(data.getFullName(), 5)) throw new FullNameLengthException("Name must be 5 or more characters");
+        if (!dataLengthIsValid(data.getAbout()   , 10)) throw new AboutLengthException("About must be 10 characters or more");
     }
 
-    private Boolean passwordLengthIsValid(String password) {
-        return password.length() >= 8;
-    }
-
-    private String capitalizeName(String name) {
-        return name.toUpperCase().trim();
+    private Boolean dataLengthIsValid(String data, int length) {
+        return data.length() >= length;
     }
 }
