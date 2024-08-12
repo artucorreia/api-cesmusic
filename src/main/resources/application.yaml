@@ -3,8 +3,6 @@ security:
     token:
       secret: ${JWT_SECRET:my-secret-key}
 spring:
-  profiles:
-    active: mysql
   application:
     name: cesmusic
   devtools:
@@ -13,13 +11,12 @@ spring:
     livereload:
       enabled: true
   datasource:
-    profiles: mysql
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://root:lVFcSJIcmDXAXHxSKkrxwgvXwVHiYCbv@monorail.proxy.rlwy.net:20250/railway
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://dpg-cqt7qobv2p9s73a8vk4g-a.oregon-postgres.render.com:5432/cesmusic_db_gb09
 #    url: ${DB_URL}
-    username: root
+    username: admin
 #    username: ${DB_USER}
-    password: lVFcSJIcmDXAXHxSKkrxwgvXwVHiYCbv
+    password: UuUPGJHDIAwsOseNVBigdBtDmJJcTDWX
 #    password: ${DB_PASSWORD}
   jpa:
     open-in-view: false

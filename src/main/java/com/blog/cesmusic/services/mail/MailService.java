@@ -33,13 +33,11 @@ public class MailService {
             String template = getMailTemplate("templates/new-user-mail-template.html");
             template = template.replace("${name}", newUser.getFullName());
             template = template.replace("${login}", newUser.getLogin());
-            template = template.replace("${about}", newUser.getAbout());
 
             helper.setText(
                     "New user:\n" +
                             "\nName: " + newUser.getFullName() +
-                            "\nLogin: " + newUser.getLogin() +
-                            "\nAbout: " + newUser.getAbout(),
+                            "\nLogin: " + newUser.getLogin(),
                     template
             );
 

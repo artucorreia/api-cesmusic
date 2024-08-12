@@ -58,6 +58,12 @@
             font-size: 16px;
             margin-top: 20px;
         }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #999;
+        }
     </style>
 </head>
 <body>
@@ -71,11 +77,10 @@
             <h2>Email</h2>
             <p>${login}</p>
         </div>
-        <div class="section">
-            <h2>About</h2>
-            <p>${about}</p>
-        </div>
         <a href="http://localhost:8080/auth/accept/${login}" target="_blank" class="btn">Aceitar Novo Usuário</a>
+        <div class="footer">
+            <p>&copy; 2024 CesMusic. Todos os direitos reservados.</p>
+        </div>
     </main>
 </body>
 </html>

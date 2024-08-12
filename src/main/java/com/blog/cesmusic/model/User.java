@@ -9,48 +9,53 @@ import java.io.Serializable;
 import java.util.*;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "users")
 public class User implements UserDetails, Serializable {
 
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "FULL_NAME", length = 100, nullable = false)
+    @Column(name = "full_name", length = 100, nullable = false)
     private String fullName;
 
-    @Column(name = "LOGIN", length = 100, nullable = false, unique = true)
+    @Column(length = 100, nullable = false, unique = true)
     private String login;
 
-    @Column(name = "PASSWORD", length = 100, nullable = false)
+    @Column(length = 100, nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(name = "ABOUT", length = 1000, nullable = false) @Lob
+    @Column(length = 1000, nullable = false)
     private String about;
 
-    @Column(name = "ACTIVE", nullable = false)
+    @Column(name = "active_email", nullable = false)
+    private Boolean activeEmail;
+
+    @Column(nullable = false)
     private Boolean active;
 
     public User() {}
 
-    public User(UUID id, String fullName, String login, String password, Role role, String about, Boolean active) {
+    public User(UUID id, String fullName, String login, String password, Role role, String about, Boolean activeEmail, Boolean active) {
         this.id = id;
         this.fullName = fullName;
         this.login = login;
         this.password = password;
         this.role = role;
         this.about = about;
+        this.activeEmail = activeEmail;
         this.active = active;
     }
 
-    public User(String fullName, String login, String password, Role role, String about, Boolean active) {
+    public User(String fullName, String login, String password, Role role, String about, Boolean activeEmail, Boolean active) {
         this.fullName = fullName;
         this.login = login;
         this.password = password;
         this.role = role;
         this.about = about;
+        this.activeEmail = activeEmail;
         this.active = active;
     }
 
@@ -134,6 +139,14 @@ public class User implements UserDetails, Serializable {
         this.about = about;
     }
 
+    public Boolean getActiveEmail() {
+        return activeEmail;
+    }
+
+    public void setActiveEmail(Boolean activeEmail) {
+        this.activeEmail = activeEmail;
+    }
+
     public Boolean getActive() {
         return active;
     }
@@ -153,11 +166,12 @@ public class User implements UserDetails, Serializable {
                 && Objects.equals(password, user.password)
                 && role == user.role
                 && Objects.equals(about, user.about)
+                && Objects.equals(activeEmail, user.activeEmail)
                 && Objects.equals(active, user.active);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fullName, login, password, role, about, active);
+        return Objects.hash(id, fullName, login, password, role, about, activeEmail, active);
     }
 }

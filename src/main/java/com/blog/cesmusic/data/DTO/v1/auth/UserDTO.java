@@ -11,16 +11,18 @@ public class UserDTO {
     private String login;
     private Role role;
     private String about;
+    private Boolean activeEmail;
     private Boolean active;
 
     public UserDTO() {}
 
-    public UserDTO(UUID id, String fullName, String login, Role role, String about, Boolean active) {
+    public UserDTO(UUID id, String fullName, String login, Role role, String about, Boolean activeEmail, Boolean active) {
         this.id = id;
         this.fullName = fullName;
         this.login = login;
         this.role = role;
         this.about = about;
+        this.activeEmail = activeEmail;
         this.active = active;
     }
 
@@ -58,6 +60,14 @@ public class UserDTO {
 
     public Boolean getActive() {
         return active;
+    }
+
+    public Boolean getActiveEmail() {
+        return activeEmail;
+    }
+
+    public void setActiveEmail(Boolean activeEmail) {
+        this.activeEmail = activeEmail;
     }
 
     public void setActive(Boolean active) {

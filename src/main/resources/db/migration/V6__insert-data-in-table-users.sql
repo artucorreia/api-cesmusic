@@ -1,3 +1,0 @@
-INSERT INTO USERS (`ID`, `FULL_NAME`, `LOGIN`, `PASSWORD`, `ROLE`, `ABOUT`, `ACTIVE`) VALUES
-	 (0x5A38A7FEFBE94E44A89B42F1A0DC8561,'EMMANUEL TAVARES','emmanuel.t2003@hotmail.com','$2a$10$pkDqMBDt81TePs0RfBbcTu0rVTTseXKixEk2e7YSphoTKQEeuLSf2','ADMIN','Um dos responsáveis pelo projeto. Gosto de tocar e cantar',1),
-	 (0x6AEA183584B74F7E8CC573D4076B7117,'ARTHUR CORREIA','arthurcorria0109@gmail.com','$2a$10$NUAuAsckvYbawwvLeRmt1ejmkHWf0GG84upN5/M9V0X3XG8nAJn0C','ADMIN', 'Um dos responsáveis pelo projeto. Gosto de ouvir música e só isso', 1);

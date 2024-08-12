@@ -45,6 +45,7 @@ public class UserService {
                 passwordEncoder,
                 Role.USER,
                 "",
+                false,
                 false
         );
 
