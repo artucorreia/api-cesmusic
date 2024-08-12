@@ -33,14 +33,8 @@ public class SecurityConfigurations {
                                 // hello world
                                 .requestMatchers(HttpMethod.GET, "/hello-world").permitAll()
 
-//                                // general
-//                                .requestMatchers(HttpMethod.POST, "/api/v1/**").hasRole("ADMIN")
-//                                .requestMatchers(HttpMethod.PUT, "/api/v1/**").hasRole("ADMIN")
-//                                .requestMatchers(HttpMethod.DELETE, "/api/v1/**").hasRole("ADMIN")
-
                                 // auth
                                 .requestMatchers(HttpMethod.PUT, "/auth/accept/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/auth/recuse/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
 
