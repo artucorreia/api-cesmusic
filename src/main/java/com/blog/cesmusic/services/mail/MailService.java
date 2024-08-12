@@ -21,7 +21,7 @@ public class MailService {
     private JavaMailSender javaMailSender;
 
     public void sendNewUserMail(UserDTO newUser, String adminLogin) {
-        logger.info("Sending message.");
+        logger.info("Sending mail to admin");
 
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -30,7 +30,7 @@ public class MailService {
             helper.setFrom("no-reply@cesmusic.blog");
             helper.setSubject("New User");
 
-            String template = getMailTemplate();
+            String template = getMailTemplate("templates/new-user-mail-template.html");
             template = template.replace("${name}", newUser.getFullName());
             template = template.replace("${login}", newUser.getLogin());
             template = template.replace("${about}", newUser.getAbout());
@@ -50,9 +50,33 @@ public class MailService {
         }
     }
 
-    private String getMailTemplate() throws IOException {
-        ClassPathResource resource = new ClassPathResource("templates/NewUserMailTemplate.html");
-        return new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+    public void sendUserAcceptedMail(UserDTO user) {
+        logger.info("Sending mail to user");
+
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo("<" + user.getLogin() + ">");
+            helper.setFrom("no-reply@cesmusic.blog");
+            helper.setSubject("Conta Ativada");
+
+            String template = getMailTemplate("templates/user-accept-mail-template.html");
+            template = template.replace("${name}", user.getFullName());
+
+            helper.setText(
+                    "Sua conta foi ativada com sucesso",
+                    template
+            );
+
+            javaMailSender.send(message);
+        }
+        catch (Exception e) {
+            throw new MailSendingException("Error when trying to send mail");
+        }
     }
 
+    private String getMailTemplate(String path) throws IOException {
+        ClassPathResource resource = new ClassPathResource(path);
+        return new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+    }
 }

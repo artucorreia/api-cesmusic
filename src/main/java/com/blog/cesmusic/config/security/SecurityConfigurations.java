@@ -30,10 +30,13 @@ public class SecurityConfigurations {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                // general
-                                .requestMatchers(HttpMethod.POST, "/api/v1/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/api/v1/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/api/v1/**").hasRole("ADMIN")
+                                // hello world
+                                .requestMatchers(HttpMethod.GET, "/hello-world").permitAll()
+
+//                                // general
+//                                .requestMatchers(HttpMethod.POST, "/api/v1/**").hasRole("ADMIN")
+//                                .requestMatchers(HttpMethod.PUT, "/api/v1/**").hasRole("ADMIN")
+//                                .requestMatchers(HttpMethod.DELETE, "/api/v1/**").hasRole("ADMIN")
 
                                 // auth
                                 .requestMatchers(HttpMethod.PUT, "/auth/accept/**").hasRole("ADMIN")
@@ -43,12 +46,6 @@ public class SecurityConfigurations {
 
                                 // users
                                 .requestMatchers(HttpMethod.GET, "/api/v1/users/pending").hasRole("ADMIN")
-
-                                // tags
-                                .requestMatchers(HttpMethod.GET, "/api/v1/tags/**").permitAll()
-
-                                // posts
-                                .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
 
                                 // swagger
                                 .requestMatchers("/v3/api-docs/**").permitAll()

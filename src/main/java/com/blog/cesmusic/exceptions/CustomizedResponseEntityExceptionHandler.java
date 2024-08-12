@@ -122,47 +122,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(LoginLengthException.class)
-    public final ResponseEntity<ExceptionResponse> handleLoginLengthExceptions(
-            Exception exception,
-            WebRequest request
-    ) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                LocalDateTime.now(),
-                exception.getMessage(),
-                request.getDescription(false)
-        );
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PasswordLengthException.class)
-    public final ResponseEntity<ExceptionResponse> handlePasswordLengthExceptions(
-            Exception exception,
-            WebRequest request
-    ) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                LocalDateTime.now(),
-                exception.getMessage(),
-                request.getDescription(false)
-        );
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(FullNameLengthException.class)
-    public final ResponseEntity<ExceptionResponse> handleFullNameLengthExceptions(
-            Exception exception,
-            WebRequest request
-    ) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                LocalDateTime.now(),
-                exception.getMessage(),
-                request.getDescription(false)
-        );
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(AboutLengthException.class)
-    public final ResponseEntity<ExceptionResponse> handleAboutLengthExceptions(
+    @ExceptionHandler(DataLengthException.class)
+    public final ResponseEntity<ExceptionResponse> handleDataLengthExceptions(
             Exception exception,
             WebRequest request
     ) {

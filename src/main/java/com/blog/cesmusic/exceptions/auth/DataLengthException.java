@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class PasswordLengthException extends RuntimeException{
-    public PasswordLengthException(String message) {
+public class DataLengthException extends RuntimeException{
+    public DataLengthException(String message) {
         super(message);
     }
 }

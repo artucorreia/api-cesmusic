@@ -1,4 +1,3 @@
 INSERT INTO USERS (`ID`, `FULL_NAME`, `LOGIN`, `PASSWORD`, `ROLE`, `ABOUT`, `ACTIVE`) VALUES
-	 (0x6770AB854C5A4F6290929C393BE76C3E,'EMMANUEL TAVARES','emmanuel.t2003@hotmail.com','$2a$10$3.5TBYW3.Dn8brdQBzEvS.d18tS4Gf5XTgfq7QYFOhwctwSXcssZu','ADMIN', 'Sou cantor, compositor. Tenho um perfil no spotify', 1),
-	 (0x6AEA183584B74F7E8CC573D4076B7117,'ARTHUR CORREIA','arthurcorria0109@gmail.com','$2a$10$NUAuAsckvYbawwvLeRmt1ejmkHWf0GG84upN5/M9V0X3XG8nAJn0C','ADMIN', 'Gosto de ouvir música e só isso', 1),
-	 (0x5923E5AABF1E4A238A1B3CDAFAC21662,'TESTE DA SILVA','tiotubemais18@gmail.com','$2a$10$vnHy15LhK1u9dQQemEdJQ.Uh.J0tKYgFvl5ggeyRrDGBNGJa.6ZMa','USER', 'perfil apenas de teste, eu escuto musica', 1);
+	 (0x5A38A7FEFBE94E44A89B42F1A0DC8561,'EMMANUEL TAVARES','emmanuel.t2003@hotmail.com','$2a$10$pkDqMBDt81TePs0RfBbcTu0rVTTseXKixEk2e7YSphoTKQEeuLSf2','ADMIN','Um dos responsáveis pelo projeto. Gosto de tocar e cantar',1),
+	 (0x6AEA183584B74F7E8CC573D4076B7117,'ARTHUR CORREIA','arthurcorria0109@gmail.com','$2a$10$NUAuAsckvYbawwvLeRmt1ejmkHWf0GG84upN5/M9V0X3XG8nAJn0C','ADMIN', 'Um dos responsáveis pelo projeto. Gosto de ouvir música e só isso', 1);

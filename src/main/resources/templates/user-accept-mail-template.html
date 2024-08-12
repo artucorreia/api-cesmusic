@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CesMusic - Confirmação de Ativação</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            color: #44B6D5;
+            font-size: 24px;
+        }
+        .content {
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .button-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .button {
+            background-color: #44B6D5;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #369eb7;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Bem-vindo ao CesMusic!</h1>
+    </div>
+    <div class="content">
+        <p>Olá, ${name}</p>
+        <p>Sua conta foi ativada com sucesso! Faça seu login agora mesmo e comece a criar seus posts.</p>
+    </div>
+    <div class="button-container">
+        <a href="https://musical-blog-cesmac.vercel.app/login" target="_blank" class="button">Entrar Agora</a>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 CesMusic. Todos os direitos reservados.</p>
+    </div>
+</div>
+</body>
+</html>

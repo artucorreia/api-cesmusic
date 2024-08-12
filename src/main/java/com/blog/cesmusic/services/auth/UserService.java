@@ -44,11 +44,11 @@ public class UserService {
                 data.getLogin(),
                 passwordEncoder,
                 Role.USER,
-                data.getAbout(),
+                "",
                 false
         );
 
-        sendMails(Mapper.parseObject(entity, UserDTO.class));
+        sendMailToAdmins(Mapper.parseObject(entity, UserDTO.class));
 
         return Mapper.parseObject(
                 repository.save(entity),
@@ -57,16 +57,19 @@ public class UserService {
     }
 
     public UserDTO acceptUser(String login) {
-        User user = Mapper.parseObject(findByLogin(login), User.class);
+        User entity = Mapper.parseObject(findByLogin(login), User.class);
+        if (entity.getActive()) throw new UserIsAlreadyActiveException("User is already active");
 
-        if (user.getActive()) throw new UserIsAlreadyActiveException("User is already active");
+        entity.setActive(true);
 
-        user.setActive(true);
-
-        return Mapper.parseObject(
-                repository.save(user),
+        UserDTO user = Mapper.parseObject(
+                repository.save(entity),
                 UserDTO.class
         );
+
+        sendMailToUser(user);
+
+        return user;
     }
 
     public List<UserDTO> findInactiveUsers() {
@@ -76,22 +79,24 @@ public class UserService {
         );
     }
 
-    private void sendMails(UserDTO user) {
+    private void sendMailToAdmins(UserDTO user) {
         for (String login : repository.findAdminsLogin()) {
             mailService.sendNewUserMail(user, login);
         }
     }
 
-    // data validations
+    private void sendMailToUser(UserDTO user) {
+        mailService.sendUserAcceptedMail(user);
+    }
+
     private void validateData(RegisterDTO data) {
+        // validate data length
+        if (!dataLengthIsValid(data.getLogin()   , 6))  throw new DataLengthException("Login must be 6 characters or more");
+        if (!dataLengthIsValid(data.getPassword(), 8))  throw new DataLengthException("Password must be 8 or more characters");
+        if (!dataLengthIsValid(data.getFullName(), 5))  throw new DataLengthException("Name must be 5 or more characters");
+
         if (findByLogin(data.getLogin()) != null) throw new LoginAlreadyUsedException("Login already in use");
         if (!MailValidatorService.isValid(data.getLogin())) throw new InvalidEmailException("Login must be valid");
-
-        // validate data length
-        if (!dataLengthIsValid(data.getLogin()   , 6)) throw new LoginLengthException("Login must be 6 characters or more");
-        if (!dataLengthIsValid(data.getPassword(), 8)) throw new PasswordLengthException("Password must be 8 or more characters");
-        if (!dataLengthIsValid(data.getFullName(), 5)) throw new FullNameLengthException("Name must be 5 or more characters");
-        if (!dataLengthIsValid(data.getAbout()   , 10)) throw new AboutLengthException("About must be 10 characters or more");
     }
 
     private Boolean dataLengthIsValid(String data, int length) {
