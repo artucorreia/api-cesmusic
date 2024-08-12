@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "https://musical-blog-cesmac.vercel.app"})
 @RestController
 @RequestMapping("/hello-world")
-@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
 @Tag(name = "HelloWord", description = "Endpoint to test")
 public class HelloWorldController {
 

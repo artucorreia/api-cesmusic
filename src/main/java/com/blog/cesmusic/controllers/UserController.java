@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "https://musical-blog-cesmac.vercel.app"})
 @RestController
 @RequestMapping("/api/v1/users")
 @Tag(name = "User", description = "Endpoints to manager users")
@@ -24,7 +25,6 @@ public class UserController {
     @Autowired
     UserService service;
 
-    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
     @GetMapping(
             value = "/inactive",
             produces = MediaType.APPLICATION_JSON_VALUE

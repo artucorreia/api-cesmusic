@@ -22,6 +22,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "https://musical-blog-cesmac.vercel.app"})
 @RestController
 @RequestMapping("/auth")
 @Tag(name = "Authentication", description = "Endpoints for registration and login to the system")
@@ -36,7 +37,6 @@ public class AuthenticationController {
     @Autowired
     private TokenService tokenService;
 
-    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
     @PostMapping(
             value = "/login",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -77,7 +77,6 @@ public class AuthenticationController {
         return ResponseEntity.ok(token);
     }
 
-    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
     @PostMapping(
             value = "/register",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -110,7 +109,6 @@ public class AuthenticationController {
                 .body(userService.register(data));
     }
 
-    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
     @PutMapping(
             value = "/accept/{login}",
             produces = MediaType.APPLICATION_JSON_VALUE
