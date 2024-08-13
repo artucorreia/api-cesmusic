@@ -1,4 +1,4 @@
-package com.blog.cesmusic.services;
+package com.blog.cesmusic.services.mail;
 
 import org.springframework.stereotype.Service;
 

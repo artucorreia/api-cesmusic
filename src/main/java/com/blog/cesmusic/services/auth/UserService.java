@@ -8,7 +8,7 @@ import com.blog.cesmusic.mapper.Mapper;
 import com.blog.cesmusic.model.Role;
 import com.blog.cesmusic.model.User;
 import com.blog.cesmusic.repositories.UserRepository;
-import com.blog.cesmusic.services.MailValidatorService;
+import com.blog.cesmusic.services.mail.MailValidatorService;
 import com.blog.cesmusic.services.mail.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,9 +16,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class UserService {
+    private final Logger logger = Logger.getLogger(UserService.class.getName());
 
     @Autowired
     private UserRepository repository;
@@ -26,16 +28,25 @@ public class UserService {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private LoginCodeService loginCodeService;
+
     public UserDetails findByLogin(String login) {
+        logger.info("Finding user by login");
+
         return repository.findByLogin(login);
     }
 
     public void verifyPendingUser(AuthenticationDTO data) {
+        logger.info("Verifying if user is pending");
+
         User user = Mapper.parseObject(findByLogin(data.getLogin()), User.class);
         if (!user.getActive()) throw new PendingUserException("User is inactive");
     }
 
     public UserDTO register(RegisterDTO data) {
+        logger.info("Registering a new user");
+
         validateData(data);
 
         String passwordEncoder = new BCryptPasswordEncoder().encode(data.getPassword());
@@ -49,8 +60,6 @@ public class UserService {
                 false
         );
 
-        sendMailToAdmins(Mapper.parseObject(entity, UserDTO.class));
-
         return Mapper.parseObject(
                 repository.save(entity),
                 UserDTO.class
@@ -58,6 +67,8 @@ public class UserService {
     }
 
     public UserDTO acceptUser(String login) {
+        logger.info("Accepting a user");
+
         User entity = Mapper.parseObject(findByLogin(login), User.class);
         if (entity.getActive()) throw new UserIsAlreadyActiveException("User is already active");
 
@@ -74,6 +85,8 @@ public class UserService {
     }
 
     public List<UserDTO> findInactiveUsers() {
+        logger.info("Finding inactive users");
+
         return Mapper.parseListObjects(
                 repository.findInactiveUsers(),
                 UserDTO.class
@@ -84,6 +97,10 @@ public class UserService {
         for (String login : repository.findAdminsLogin()) {
             mailService.sendNewUserMail(user, login);
         }
+    }
+
+    private void sendMailToValidateMail() {
+//        mailService.sendLoginCodeMail();
     }
 
     private void sendMailToUser(UserDTO user) {

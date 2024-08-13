@@ -37,6 +37,7 @@ public class SecurityConfigurations {
                                 .requestMatchers(HttpMethod.PUT, "/auth/accept/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/auth/create-login-code/**").permitAll()
 
                                 // users
                                 .requestMatchers(HttpMethod.GET, "/api/v1/users/pending").hasRole("ADMIN")

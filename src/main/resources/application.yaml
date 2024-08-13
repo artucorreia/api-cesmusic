@@ -12,12 +12,9 @@ spring:
       enabled: true
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://dpg-cqt7qobv2p9s73a8vk4g-a.oregon-postgres.render.com:5432/cesmusic_db_gb09
-#    url: ${DB_URL}
-    username: admin
-#    username: ${DB_USER}
-    password: UuUPGJHDIAwsOseNVBigdBtDmJJcTDWX
-#    password: ${DB_PASSWORD}
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   jpa:
     open-in-view: false
     hibernate:

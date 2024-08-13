@@ -1,5 +1,6 @@
 package com.blog.cesmusic.services.mail;
 
+import com.blog.cesmusic.data.DTO.v1.auth.LoginCodeDTO;
 import com.blog.cesmusic.data.DTO.v1.auth.UserDTO;
 import com.blog.cesmusic.exceptions.mail.MailSendingException;
 import jakarta.mail.internet.MimeMessage;
@@ -19,6 +20,32 @@ public class MailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
+
+    public void sendLoginCodeMail(LoginCodeDTO loginCode) {
+        logger.info("Sending mail to user");
+        System.out.println(loginCode);
+        System.out.println(loginCode.getUser().getLogin());
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo("<" + loginCode.getUser().getLogin() + ">");
+            helper.setFrom("no-reply@cesmusic.blog");
+            helper.setSubject("Código de Validação");
+
+            String template = getMailTemplate("templates/login-code-mail-template.html");
+            template = template.replace("${code}", loginCode.getCode());
+
+            helper.setText(
+                    "Código de Validação:" + loginCode.getCode(),
+                    template
+            );
+
+            javaMailSender.send(message);
+        }
+        catch (Exception e) {
+            throw new MailSendingException("Error when trying to send mail");
+        }
+    }
 
     public void sendNewUserMail(UserDTO newUser, String adminLogin) {
         logger.info("Sending mail to admin");

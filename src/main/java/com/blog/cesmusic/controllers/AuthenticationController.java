@@ -1,10 +1,9 @@
 package com.blog.cesmusic.controllers;
 
-import com.blog.cesmusic.data.DTO.v1.auth.AuthenticationDTO;
-import com.blog.cesmusic.data.DTO.v1.auth.RegisterDTO;
-import com.blog.cesmusic.data.DTO.v1.auth.TokenDTO;
-import com.blog.cesmusic.data.DTO.v1.auth.UserDTO;
+import com.blog.cesmusic.data.DTO.v1.auth.*;
+import com.blog.cesmusic.mapper.Mapper;
 import com.blog.cesmusic.model.User;
+import com.blog.cesmusic.services.auth.LoginCodeService;
 import com.blog.cesmusic.services.auth.TokenService;
 import com.blog.cesmusic.services.auth.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,6 +32,9 @@ public class AuthenticationController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LoginCodeService loginCodeService;
 
     @Autowired
     private TokenService tokenService;
@@ -138,5 +140,18 @@ public class AuthenticationController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userService.acceptUser(login));
+    }
+
+    @PostMapping(
+            value = "/create-login-code/{userLogin}",
+//            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<LoginCodeDTO> createLoginCode(@PathVariable String userLogin) {
+        UserDTO user = Mapper.parseObject(userService.findByLogin(userLogin), UserDTO.class);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(loginCodeService.create(user));
     }
 }

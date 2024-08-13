@@ -36,9 +36,12 @@ public class User implements UserDetails, Serializable {
     @Column(nullable = false)
     private Boolean active;
 
+    @OneToMany(mappedBy = "user")
+    private List<LoginCode> codes;
+
     public User() {}
 
-    public User(UUID id, String fullName, String login, String password, Role role, String about, Boolean activeEmail, Boolean active) {
+    public User(UUID id, String fullName, String login, String password, Role role, String about, Boolean activeEmail, Boolean active, List<LoginCode> codes) {
         this.id = id;
         this.fullName = fullName;
         this.login = login;
@@ -47,6 +50,7 @@ public class User implements UserDetails, Serializable {
         this.about = about;
         this.activeEmail = activeEmail;
         this.active = active;
+        this.codes = codes;
     }
 
     public User(String fullName, String login, String password, Role role, String about, Boolean activeEmail, Boolean active) {
@@ -155,6 +159,14 @@ public class User implements UserDetails, Serializable {
         this.active = active;
     }
 
+    public List<LoginCode> getCodes() {
+        return codes;
+    }
+
+    public void setCodes(List<LoginCode> codes) {
+        this.codes = codes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -167,11 +179,12 @@ public class User implements UserDetails, Serializable {
                 && role == user.role
                 && Objects.equals(about, user.about)
                 && Objects.equals(activeEmail, user.activeEmail)
-                && Objects.equals(active, user.active);
+                && Objects.equals(active, user.active)
+                && Objects.equals(codes, user.codes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fullName, login, password, role, about, activeEmail, active);
+        return Objects.hash(id, fullName, login, password, role, about, activeEmail, active, codes);
     }
 }
