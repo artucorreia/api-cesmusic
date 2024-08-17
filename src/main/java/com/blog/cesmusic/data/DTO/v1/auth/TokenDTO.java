@@ -6,16 +6,16 @@ public class TokenDTO {
 
     private String login;
     private String token;
-    private Instant created;
-    private Instant expiration;
+    private Instant createdAt;
+    private Instant expiresIn;
 
     public TokenDTO() {}
 
-    public TokenDTO(String login, String token, Instant created, Instant expiration) {
+    public TokenDTO(String login, String token, Instant createdAt, Instant expiresIn) {
         this.login = login;
         this.token = token;
-        this.created = created;
-        this.expiration = expiration;
+        this.createdAt = createdAt;
+        this.expiresIn = expiresIn;
     }
 
     public String getLogin() {
@@ -34,19 +34,19 @@ public class TokenDTO {
         this.token = token;
     }
 
-    public Instant getCreated() {
-        return created;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated(Instant created) {
-        this.created = created;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Instant getExpiration() {
-        return expiration;
+    public Instant getExpiresIn() {
+        return expiresIn;
     }
 
-    public void setExpiration(Instant expiration) {
-        this.expiration = expiration;
+    public void setExpiresIn(Instant expiresIn) {
+        this.expiresIn = expiresIn;
     }
 }

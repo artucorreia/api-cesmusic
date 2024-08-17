@@ -1,18 +1,14 @@
 package com.blog.cesmusic.services.auth;
 
-import com.blog.cesmusic.data.DTO.v1.auth.AuthenticationDTO;
-import com.blog.cesmusic.data.DTO.v1.auth.RegisterDTO;
-import com.blog.cesmusic.data.DTO.v1.auth.UserDTO;
+import com.blog.cesmusic.data.DTO.v1.auth.*;
 import com.blog.cesmusic.exceptions.auth.*;
 import com.blog.cesmusic.mapper.Mapper;
 import com.blog.cesmusic.model.Role;
 import com.blog.cesmusic.model.User;
 import com.blog.cesmusic.repositories.UserRepository;
-import com.blog.cesmusic.services.mail.MailValidatorService;
 import com.blog.cesmusic.services.mail.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,41 +24,47 @@ public class UserService {
     @Autowired
     private MailService mailService;
 
-    @Autowired
-    private LoginCodeService loginCodeService;
-
     public UserDetails findByLogin(String login) {
         logger.info("Finding user by login");
 
         return repository.findByLogin(login);
     }
 
-    public void verifyPendingUser(AuthenticationDTO data) {
-        logger.info("Verifying if user is pending");
+    public void checkUserStatus(AuthenticationDTO data) {
+        logger.info("Checking if user is inactive");
 
         User user = Mapper.parseObject(findByLogin(data.getLogin()), User.class);
-        if (!user.getActive()) throw new PendingUserException("User is inactive");
+        if (!user.getActive()) throw new InactiveUserException("Inactive user");
     }
 
-    public UserDTO register(RegisterDTO data) {
+    public UserDTO register(PendingUserDTO data) {
         logger.info("Registering a new user");
 
-        validateData(data);
+        User entity = userFactory(data);
 
-        String passwordEncoder = new BCryptPasswordEncoder().encode(data.getPassword());
-        User entity = new User(
-                data.getFullName().toUpperCase().trim(),
-                data.getLogin(),
-                passwordEncoder,
-                Role.USER,
-                "",
-                false,
-                false
-        );
+        sendMailToAdmins(Mapper.parseObject(entity, UserDTO.class));
+
+        return create(entity);
+    }
+
+    private UserDTO create(User entity) {
+        logger.info("Creating a new user");
 
         return Mapper.parseObject(
                 repository.save(entity),
                 UserDTO.class
+        );
+    }
+
+    private User userFactory(PendingUserDTO data) {
+        return new User(
+                data.getFullName().toUpperCase().trim(),
+                data.getLogin(),
+                data.getPassword(),
+                Role.USER,
+                "",
+                data.getCreatedAt(),
+                false
         );
     }
 
@@ -95,29 +97,11 @@ public class UserService {
 
     private void sendMailToAdmins(UserDTO user) {
         for (String login : repository.findAdminsLogin()) {
-            mailService.sendNewUserMail(user, login);
+            mailService.sendNotificationOfNewRegistrationToAdministrator(user, login);
         }
     }
 
-    private void sendMailToValidateMail() {
-//        mailService.sendLoginCodeMail();
-    }
-
     private void sendMailToUser(UserDTO user) {
-        mailService.sendUserAcceptedMail(user);
-    }
-
-    private void validateData(RegisterDTO data) {
-        // validate data length
-        if (!dataLengthIsValid(data.getLogin()   , 6))  throw new DataLengthException("Login must be 6 characters or more");
-        if (!dataLengthIsValid(data.getPassword(), 8))  throw new DataLengthException("Password must be 8 or more characters");
-        if (!dataLengthIsValid(data.getFullName(), 5))  throw new DataLengthException("Name must be 5 or more characters");
-
-        if (findByLogin(data.getLogin()) != null) throw new LoginAlreadyUsedException("Login already in use");
-        if (!MailValidatorService.isValid(data.getLogin())) throw new InvalidEmailException("Login must be valid");
-    }
-
-    private Boolean dataLengthIsValid(String data, int length) {
-        return data.length() >= length;
+        mailService.sendAcceptedUserNotification(user);
     }
 }

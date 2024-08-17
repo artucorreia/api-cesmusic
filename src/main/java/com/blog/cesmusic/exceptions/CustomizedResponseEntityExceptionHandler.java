@@ -1,9 +1,10 @@
 package com.blog.cesmusic.exceptions;
 
 import com.blog.cesmusic.exceptions.auth.*;
-import com.blog.cesmusic.exceptions.general.EmptyDataException;
 import com.blog.cesmusic.exceptions.general.ResourceNotFoundException;
 import com.blog.cesmusic.exceptions.mail.MailSendingException;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -42,19 +43,6 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
                 request.getDescription(false)
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(EmptyDataException.class)
-    public final ResponseEntity<ExceptionResponse> handleEmptyDataExceptions(
-            Exception exception,
-            WebRequest request
-    ) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                LocalDateTime.now(),
-                exception.getMessage(),
-                request.getDescription(false)
-        );
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MailSendingException.class)
@@ -122,6 +110,32 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(PendingUserAlreadyRegisteredException.class)
+    public final ResponseEntity<ExceptionResponse> handleLoginAlreadyValidExceptions(
+            Exception exception,
+            WebRequest request
+    ) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidLoginCodeException.class)
+    public final ResponseEntity<ExceptionResponse> handleInvalidLoginCodeExceptions(
+            Exception exception,
+            WebRequest request
+    ) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(DataLengthException.class)
     public final ResponseEntity<ExceptionResponse> handleDataLengthExceptions(
             Exception exception,
@@ -148,7 +162,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(PendingUserException.class)
+    @ExceptionHandler(InactiveUserException.class)
     public final ResponseEntity<ExceptionResponse> handleUserPendingExceptions(
             Exception exception,
             WebRequest request

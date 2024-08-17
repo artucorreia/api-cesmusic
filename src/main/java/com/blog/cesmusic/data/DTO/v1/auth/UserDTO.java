@@ -2,6 +2,7 @@ package com.blog.cesmusic.data.DTO.v1.auth;
 
 import com.blog.cesmusic.model.Role;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -11,18 +12,18 @@ public class UserDTO {
     private String login;
     private Role role;
     private String about;
-    private Boolean activeEmail;
+    private LocalDateTime createdAt;
     private Boolean active;
 
     public UserDTO() {}
 
-    public UserDTO(UUID id, String fullName, String login, Role role, String about, Boolean activeEmail, Boolean active) {
+    public UserDTO(UUID id, String fullName, String login, Role role, String about, LocalDateTime createdAt, Boolean active) {
         this.id = id;
         this.fullName = fullName;
         this.login = login;
         this.role = role;
         this.about = about;
-        this.activeEmail = activeEmail;
+        this.createdAt = createdAt;
         this.active = active;
     }
 
@@ -58,16 +59,16 @@ public class UserDTO {
         this.role = role;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public Boolean getActive() {
         return active;
-    }
-
-    public Boolean getActiveEmail() {
-        return activeEmail;
-    }
-
-    public void setActiveEmail(Boolean activeEmail) {
-        this.activeEmail = activeEmail;
     }
 
     public void setActive(Boolean active) {

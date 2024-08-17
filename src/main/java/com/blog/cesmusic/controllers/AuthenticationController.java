@@ -1,9 +1,8 @@
 package com.blog.cesmusic.controllers;
 
 import com.blog.cesmusic.data.DTO.v1.auth.*;
-import com.blog.cesmusic.mapper.Mapper;
 import com.blog.cesmusic.model.User;
-import com.blog.cesmusic.services.auth.LoginCodeService;
+import com.blog.cesmusic.services.auth.PendingUserService;
 import com.blog.cesmusic.services.auth.TokenService;
 import com.blog.cesmusic.services.auth.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "https://musical-blog-cesmac.vercel.app"})
@@ -31,13 +32,13 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private TokenService tokenService;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
-    private LoginCodeService loginCodeService;
-
-    @Autowired
-    private TokenService tokenService;
+    private PendingUserService pendingUserService;
 
     @PostMapping(
             value = "/login",
@@ -68,7 +69,7 @@ public class AuthenticationController {
             }
     )
     public ResponseEntity<TokenDTO> login(@RequestBody AuthenticationDTO data) {
-        userService.verifyPendingUser(data);
+        userService.checkUserStatus(data);
 
         UsernamePasswordAuthenticationToken usernamePassword =
                 new UsernamePasswordAuthenticationToken(data.getLogin(), data.getPassword());
@@ -94,10 +95,10 @@ public class AuthenticationController {
             value = {
                     @ApiResponse(
                             responseCode = "201",
-                            description = "Created",
+                            description = "Success",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = UserDTO.class)
+                                    schema = @Schema(implementation = PendingUserDTO.class)
                             )
                     ),
                     @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
@@ -105,21 +106,21 @@ public class AuthenticationController {
                     @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
             }
     )
-    public ResponseEntity<UserDTO> register(@RequestBody RegisterDTO data) {
+    public ResponseEntity<PendingUserDTO> register(@RequestBody RegisterDTO data) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(userService.register(data));
+                .body(pendingUserService.register(data));
     }
 
     @PutMapping(
-            value = "/accept/{login}",
+            value = "/activate/{login}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @Operation(
-            summary = "Accept a new user",
-            description = "Accept a new user",
+            summary = "Activate a inactive user",
+            description = "Activate a inactive user",
             tags = {"Authentication"},
-            method = "GET"
+            method = "PUT"
     )
     @ApiResponses(
             value = {
@@ -142,16 +143,34 @@ public class AuthenticationController {
                 .body(userService.acceptUser(login));
     }
 
-    @PostMapping(
-            value = "/create-login-code/{userLogin}",
-//            consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PutMapping(
+            value = "/validate-login-code/{code}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<LoginCodeDTO> createLoginCode(@PathVariable String userLogin) {
-        UserDTO user = Mapper.parseObject(userService.findByLogin(userLogin), UserDTO.class);
-
+    @Operation(
+            summary = "Validate a login code",
+            description = "Validate a login code",
+            tags = {"Authentication"},
+            method = "PUT"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = UserDTO.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
+                    @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content),
+            }
+    )
+    public ResponseEntity<UserDTO> validateLoginCode(@PathVariable String code) {
         return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(loginCodeService.create(user));
+                .status(HttpStatus.OK)
+                .body(pendingUserService.validateLoginCode(code));
     }
 }

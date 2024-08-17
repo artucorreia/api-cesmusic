@@ -7,65 +7,68 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            color: #333;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .container {
-            background-color: #fff;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
         }
 
         .logo {
-            font-size: 24px;
+            font-size: 2em;
             font-weight: bold;
             color: #44B6D5;
             margin-bottom: 20px;
         }
 
-        .code {
-            font-size: 36px;
-            font-weight: bold;
-            color: #333;
-            letter-spacing: 8px;
-            background-color: #f0f0f0;
-            padding: 10px 20px;
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
             border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333333;
+            font-size: 1.5em;
+        }
+        p {
+            color: #555555;
+        }
+        .validate-button {
             display: inline-block;
-        }
-
-        .message {
-            font-size: 18px;
-            margin: 20px 0;
-            color: #666;
-        }
-
-        .footer {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #ffffff;
+            background-color: #44B6D5;
+            text-decoration: none;
+            border-radius: 5px;
             text-align: center;
+        }
+        .footer-text {
+            color: #999999;
+            font-size: 12px;
             margin-top: 20px;
-            font-size: 14px;
-            color: #999;
+        }
+        .footer-credits {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #999999;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="logo">CesMusic</div>
-        <div class="message">Seu código de validação é:</div>
-        <div class="code">${code}</div>
-        <div class="footer">
-            <p>&copy; 2024 CesMusic. Todos os direitos reservados.</p>
-        </div>
+        <h2>Olá, ${fullName}!</h2>
+        <p>Clique no botão abaixo para validar o seu e-mail:</p>
+
+        <a href="${url}" class="validate-button">
+            Validar E-mail
+        </a>
+
+        <p class="footer-text">Se você não solicitou essa validação, ignore este e-mail.</p>
+
+        <p class="footer-credits">&copy; 2024 CesMusic. Todos os direitos reservados.</p>
     </div>
 </body>
 </html>

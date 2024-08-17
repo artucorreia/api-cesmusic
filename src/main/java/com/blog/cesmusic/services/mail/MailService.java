@@ -1,6 +1,6 @@
 package com.blog.cesmusic.services.mail;
 
-import com.blog.cesmusic.data.DTO.v1.auth.LoginCodeDTO;
+import com.blog.cesmusic.data.DTO.v1.auth.PendingUserDTO;
 import com.blog.cesmusic.data.DTO.v1.auth.UserDTO;
 import com.blog.cesmusic.exceptions.mail.MailSendingException;
 import jakarta.mail.internet.MimeMessage;
@@ -17,26 +17,27 @@ import java.util.logging.Logger;
 @Service
 public class MailService {
     private final Logger logger = Logger.getLogger(MailService.class.getName());
+    private final String WEBSITE_URL = "https://musical-blog-cesmac.vercel.app/";
 
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendLoginCodeMail(LoginCodeDTO loginCode) {
-        logger.info("Sending mail to user");
-        System.out.println(loginCode);
-        System.out.println(loginCode.getUser().getLogin());
+    public void sendEmailValidationCode(PendingUserDTO pendingUser) {
+        logger.info("Sending validation code to user");
+
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setTo("<" + loginCode.getUser().getLogin() + ">");
+            helper.setTo("<" + pendingUser.getLogin() + ">");
             helper.setFrom("no-reply@cesmusic.blog");
-            helper.setSubject("Código de Validação");
+            helper.setSubject("Validação de Email");
 
             String template = getMailTemplate("templates/login-code-mail-template.html");
-            template = template.replace("${code}", loginCode.getCode());
+            template = template.replace("${fullName}", pendingUser.getFullName());
+            template = template.replace("${url}",WEBSITE_URL + "register/authenticate-code/" + pendingUser.getLoginCode());
 
             helper.setText(
-                    "Código de Validação:" + loginCode.getCode(),
+                    "Código de Validação:" + pendingUser.getLoginCode(),
                     template
             );
 
@@ -47,7 +48,7 @@ public class MailService {
         }
     }
 
-    public void sendNewUserMail(UserDTO newUser, String adminLogin) {
+    public void sendNotificationOfNewRegistrationToAdministrator(UserDTO newUser, String adminLogin) {
         logger.info("Sending mail to admin");
 
         try {
@@ -60,6 +61,7 @@ public class MailService {
             String template = getMailTemplate("templates/new-user-mail-template.html");
             template = template.replace("${name}", newUser.getFullName());
             template = template.replace("${login}", newUser.getLogin());
+            template = template.replace("${url}", WEBSITE_URL + "admin/authenticate-user/" + newUser.getLogin());
 
             helper.setText(
                     "New user:\n" +
@@ -75,7 +77,7 @@ public class MailService {
         }
     }
 
-    public void sendUserAcceptedMail(UserDTO user) {
+    public void sendAcceptedUserNotification(UserDTO user) {
         logger.info("Sending mail to user");
 
         try {

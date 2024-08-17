@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -30,36 +31,32 @@ public class User implements UserDetails, Serializable {
     @Column(length = 1000, nullable = false)
     private String about;
 
-    @Column(name = "active_email", nullable = false)
-    private Boolean activeEmail;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private Boolean active;
 
-    @OneToMany(mappedBy = "user")
-    private List<LoginCode> codes;
-
     public User() {}
 
-    public User(UUID id, String fullName, String login, String password, Role role, String about, Boolean activeEmail, Boolean active, List<LoginCode> codes) {
+    public User(String fullName, String login, String password, Role role, String about, LocalDateTime createdAt, Boolean active) {
+        this.fullName = fullName;
+        this.login = login;
+        this.password = password;
+        this.role = role;
+        this.about = about;
+        this.createdAt = createdAt;
+        this.active = active;
+    }
+
+    public User(UUID id, String fullName, String login, String password, Role role, String about, LocalDateTime createdAt, Boolean active) {
         this.id = id;
         this.fullName = fullName;
         this.login = login;
         this.password = password;
         this.role = role;
         this.about = about;
-        this.activeEmail = activeEmail;
-        this.active = active;
-        this.codes = codes;
-    }
-
-    public User(String fullName, String login, String password, Role role, String about, Boolean activeEmail, Boolean active) {
-        this.fullName = fullName;
-        this.login = login;
-        this.password = password;
-        this.role = role;
-        this.about = about;
-        this.activeEmail = activeEmail;
+        this.createdAt = createdAt;
         this.active = active;
     }
 
@@ -143,12 +140,12 @@ public class User implements UserDetails, Serializable {
         this.about = about;
     }
 
-    public Boolean getActiveEmail() {
-        return activeEmail;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setActiveEmail(Boolean activeEmail) {
-        this.activeEmail = activeEmail;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Boolean getActive() {
@@ -157,14 +154,6 @@ public class User implements UserDetails, Serializable {
 
     public void setActive(Boolean active) {
         this.active = active;
-    }
-
-    public List<LoginCode> getCodes() {
-        return codes;
-    }
-
-    public void setCodes(List<LoginCode> codes) {
-        this.codes = codes;
     }
 
     @Override
@@ -178,13 +167,12 @@ public class User implements UserDetails, Serializable {
                 && Objects.equals(password, user.password)
                 && role == user.role
                 && Objects.equals(about, user.about)
-                && Objects.equals(activeEmail, user.activeEmail)
-                && Objects.equals(active, user.active)
-                && Objects.equals(codes, user.codes);
+                && Objects.equals(createdAt, user.createdAt)
+                && Objects.equals(active, user.active);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fullName, login, password, role, about, activeEmail, active, codes);
+        return Objects.hash(id, fullName, login, password, role, about, createdAt, active);
     }
 }

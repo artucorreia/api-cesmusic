@@ -23,16 +23,16 @@ public class TokenService {
     public TokenDTO generateToken(User user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
-            Instant created = getIssueDate();
-            Instant expiration = generateExpirationDate();
+            Instant createdAt = getIssueDate();
+            Instant expiresIn = generateExpirationDate();
             String token = JWT.create()
                     .withIssuer("cesmusic")
                     .withSubject(user.getLogin())
-                    .withIssuedAt(created)
-                    .withExpiresAt(expiration)
+                    .withIssuedAt(createdAt)
+                    .withExpiresAt(expiresIn)
                     .sign(algorithm);
 
-            return new TokenDTO(user.getLogin(), token, created, expiration);
+            return new TokenDTO(user.getLogin(), token, createdAt, expiresIn);
         }
         catch (JWTCreationException e) {
             throw new JwtCreationTokenException("Error while generating a token");
