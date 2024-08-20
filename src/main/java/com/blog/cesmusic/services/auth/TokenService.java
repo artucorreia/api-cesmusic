@@ -13,14 +13,18 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.logging.Logger;
 
 @Service
 public class TokenService {
+    private Logger logger = Logger.getLogger(TokenService.class.getName());
 
-    @Value("${security.jwt.token.secret}")
-    private String secretKey;
+//    @Value("${security.jwt.token.secret}")
+    private String secretKey = "my_secret_key";
 
     public TokenDTO generateToken(User user) {
+        logger.info("Generating token");
+
         System.out.println(secretKey);
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
@@ -41,6 +45,8 @@ public class TokenService {
     }
 
     public String validateToken(String token) {
+        logger.info("Validating token");
+
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             return JWT.require(algorithm)
@@ -50,15 +56,16 @@ public class TokenService {
                     .getSubject();
         }
         catch (JWTVerificationException e) {
+            logger.warning("Token validation failed: " + e.getMessage());
             return "";
         }
     }
 
     private Instant generateExpirationDate() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.UTC);
     }
 
     private Instant getIssueDate() {
-        return LocalDateTime.now().toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().toInstant(ZoneOffset.UTC);
     }
 }
