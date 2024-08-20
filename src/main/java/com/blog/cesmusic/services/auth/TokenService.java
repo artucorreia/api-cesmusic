@@ -21,6 +21,7 @@ public class TokenService {
     private String secretKey;
 
     public TokenDTO generateToken(User user) {
+        System.out.println(secretKey);
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             Instant createdAt = getIssueDate();

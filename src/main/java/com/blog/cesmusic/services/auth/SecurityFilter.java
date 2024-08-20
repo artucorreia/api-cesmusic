@@ -36,7 +36,11 @@ public class SecurityFilter extends OncePerRequestFilter {
 
             if (token != null) {
                 String login = tokenService.validateToken(token);
+                System.out.println(login);
                 UserDetails user = userService.findByLogin(login);
+                System.out.println(user.getAuthorities());
+                System.out.println(user.getUsername());
+
 
                 if (user == null) throw new InvalidTokenException("Invalid or expired Token");
 
