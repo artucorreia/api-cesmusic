@@ -19,13 +19,12 @@ import java.util.logging.Logger;
 public class TokenService {
     private Logger logger = Logger.getLogger(TokenService.class.getName());
 
-//    @Value("${security.jwt.token.secret}")
-    private String secretKey = "my_secret_key";
+    @Value("${security.jwt.token.secret}")
+    private String secretKey;
 
     public TokenDTO generateToken(User user) {
         logger.info("Generating token");
 
-        System.out.println(secretKey);
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             Instant createdAt = getIssueDate();
