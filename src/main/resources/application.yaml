@@ -1,7 +1,7 @@
 security:
   jwt:
     token:
-      secret: ${JWT_SECRET:my-secret-key}
+      secret: ${JWT_SECRET}
 spring:
   application:
     name: cesmusic
