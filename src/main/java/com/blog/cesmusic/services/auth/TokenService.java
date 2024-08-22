@@ -10,21 +10,26 @@ import com.blog.cesmusic.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.logging.Logger;
 
 @Service
 public class TokenService {
+    private final Logger logger = Logger.getLogger(TokenService.class.getName());
 
     @Value("${security.jwt.token.secret}")
     private String secretKey;
 
     public TokenDTO generateToken(User user) {
+        logger.info("Generating token");
+
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             Instant createdAt = getIssueDate();
-            Instant expiresIn = generateExpirationDate();
+            Instant expiresIn = generateExpirationDate(createdAt);
             String token = JWT.create()
                     .withIssuer("cesmusic")
                     .withSubject(user.getLogin())
@@ -40,6 +45,8 @@ public class TokenService {
     }
 
     public String validateToken(String token) {
+        logger.info("Validating token");
+
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             return JWT.require(algorithm)
@@ -49,15 +56,16 @@ public class TokenService {
                     .getSubject();
         }
         catch (JWTVerificationException e) {
+            logger.warning("Token validation failed: " + e.getMessage());
             return "";
         }
     }
 
-    private Instant generateExpirationDate() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+    private Instant generateExpirationDate(Instant createdAt) {
+        return createdAt.plus(Duration.ofHours(2));
     }
 
     private Instant getIssueDate() {
-        return LocalDateTime.now().toInstant(ZoneOffset.of("-03:00"));
+        return Instant.now();
     }
 }

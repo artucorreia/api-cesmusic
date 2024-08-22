@@ -40,12 +40,13 @@ public class SecurityConfigurations {
                                 .requestMatchers(HttpMethod.PUT, "/auth/validate-login-code/**").permitAll()
 
                                 // users
-                                .requestMatchers(HttpMethod.GET, "/api/v1/users/pending").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/users/inactive").hasRole("ADMIN")
 
                                 // swagger
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/swagger-ui.html").permitAll()
+
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
