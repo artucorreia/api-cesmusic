@@ -1,5 +1,7 @@
 *.class
 
+# migrations
+/src/main/resources/db/migration/
 
 /node_modules
 

@@ -10,6 +10,7 @@ import com.blog.cesmusic.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
 
 @Service
 public class TokenService {
-    private Logger logger = Logger.getLogger(TokenService.class.getName());
+    private final Logger logger = Logger.getLogger(TokenService.class.getName());
 
     @Value("${security.jwt.token.secret}")
     private String secretKey;
@@ -28,7 +29,7 @@ public class TokenService {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             Instant createdAt = getIssueDate();
-            Instant expiresIn = generateExpirationDate();
+            Instant expiresIn = generateExpirationDate(createdAt);
             String token = JWT.create()
                     .withIssuer("cesmusic")
                     .withSubject(user.getLogin())
@@ -60,11 +61,11 @@ public class TokenService {
         }
     }
 
-    private Instant generateExpirationDate() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.UTC);
+    private Instant generateExpirationDate(Instant createdAt) {
+        return createdAt.plus(Duration.ofHours(2));
     }
 
     private Instant getIssueDate() {
-        return LocalDateTime.now().toInstant(ZoneOffset.UTC);
+        return Instant.now();
     }
 }
