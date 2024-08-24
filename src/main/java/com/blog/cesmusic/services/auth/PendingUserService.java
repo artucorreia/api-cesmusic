@@ -7,7 +7,6 @@ import com.blog.cesmusic.mapper.Mapper;
 import com.blog.cesmusic.model.PendingUser;
 import com.blog.cesmusic.repositories.PendingUserRepository;
 import com.blog.cesmusic.services.mail.MailService;
-import com.blog.cesmusic.services.mail.MailValidatorService;
 import com.blog.cesmusic.services.util.LoginCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -120,16 +119,7 @@ public class PendingUserService {
     private void validateData(RegisterDTO data) {
         logger.info("Validating registration data");
 
-        if (!MailValidatorService.isValid(data.getLogin())) throw new InvalidEmailException("Invalid email format");
-        if (!dataLengthIsValid(data.getLogin()   , 10))  throw new DataLengthException("Email must have 10 characters or more");
-        if (!dataLengthIsValid(data.getPassword(), 8))  throw new DataLengthException("Password must have 8 or more characters");
-        if (!dataLengthIsValid(data.getFullName(), 5))  throw new DataLengthException("Name must have 5 or more characters");
-
         if (findByLogin(data.getLogin()).isPresent()) throw new PendingUserAlreadyRegisteredException("A validation code has already been sent for this login");
         if (userService.findByLogin(data.getLogin()) != null) throw new LoginAlreadyUsedException("This email is already in use");
-    }
-
-    private Boolean dataLengthIsValid(String data, int length) {
-        return data.length() >= length;
     }
 }

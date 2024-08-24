@@ -30,29 +30,118 @@ class UserRepositoryTest {
     @Test
     @DisplayName("Should get inactive users from DB")
     void findInactiveUsers() {
-        createUser(new UserDTO(UUID.randomUUID(),"Active User", "active@gmail.com", Role.USER, "About active", LocalDateTime.now(), true));
-        createUser(new UserDTO(UUID.randomUUID(),"Inactive User 1", "inactive1@gmail.com", Role.USER, "About inactive 1", LocalDateTime.now(), false));
-        createUser(new UserDTO(UUID.randomUUID(),"Inactive User 2", "inactive2@gmail.com", Role.USER, "About inactive 2", LocalDateTime.now(), false));
+        // Arrange
+        createUser(
+                new UserDTO(
+                        UUID.randomUUID(),
+                        "Active User",
+                        "active@gmail.com", Role.USER,
+                        "About active",
+                        LocalDateTime.now(),
+                        true
+                )
+        );
+        createUser(
+                new UserDTO(
+                        UUID.randomUUID(),
+                        "Inactive User 1",
+                        "inactive1@gmail.com",
+                        Role.USER,
+                        "About inactive 1",
+                        LocalDateTime.now(),
+                        false
+                )
+        );
+        createUser(
+                new UserDTO(
+                        UUID.randomUUID(),
+                        "Inactive User 2",
+                        "inactive2@gmail.com",
+                        Role.USER,
+                        "About inactive 2",
+                        LocalDateTime.now(),
+                        false
+                )
+        );
 
+        // Act
         List<User> result = userRepository.findInactiveUsers();
 
+        // Assert
         assertThat(result).hasSize(2);
-        assertThat(result).extracting(User::getLogin).containsExactlyInAnyOrder("inactive1@gmail.com", "inactive2@gmail.com");
-        assertThat(result).extracting(User::getActive).containsOnly(false);
+        assertThat(result)
+                .extracting(User::getLogin)
+                .containsExactlyInAnyOrder("inactive1@gmail.com", "inactive2@gmail.com");
+        assertThat(result)
+                .extracting(User::getActive)
+                .containsOnly(false);
     }
 
     @Sql(scripts = "/db/cleanup.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
     @DisplayName("Should get administrator's emails")
     void findAdminsLogin() {
-        createUser(new UserDTO(UUID.randomUUID(),"Active User 1", "active1@gmail.com", Role.USER, "About active", LocalDateTime.now(), true));
-        createUser(new UserDTO(UUID.randomUUID(),"Active User 2", "active2@gmail.com", Role.USER, "About active", LocalDateTime.now(), true));
-        createUser(new UserDTO(UUID.randomUUID(),"Active User 3", "active3@gmail.com", Role.USER, "About active", LocalDateTime.now(), true));
-        createUser(new UserDTO(UUID.randomUUID(),"Admin 1", "admin1@gmail.com", Role.ADMIN, "About admin 1", LocalDateTime.now(), true));
-        createUser(new UserDTO(UUID.randomUUID(),"Admin 2", "admin2@gmail.com", Role.ADMIN, "About admin 2", LocalDateTime.now(), true));
+        // Arrange
+        createUser(
+                new UserDTO(
+                        UUID.randomUUID(),
+                        "Active User 1",
+                        "active1@gmail.com",
+                        Role.USER,
+                        "About active",
+                        LocalDateTime.now(),
+                        true
+                )
+        );
+        createUser(
+                new UserDTO(
+                        UUID.randomUUID(),
+                        "Active User 2",
+                        "active2@gmail.com",
+                        Role.USER,
+                        "About active",
+                        LocalDateTime.now(),
+                        true
+                )
+        );
+        createUser(
+                new UserDTO(
+                        UUID.randomUUID(),
+                        "Active User 3",
+                        "active3@gmail.com",
+                        Role.USER,
+                        "About active",
+                        LocalDateTime.now(),
+                        true
+                )
+        );
+        createUser(
+                new UserDTO(
+                        UUID.randomUUID(),
+                        "Admin 1",
+                        "admin1@gmail.com",
+                        Role.ADMIN,
+                        "About admin 1",
+                        LocalDateTime.now(),
+                        true
+                )
+        );
+        createUser(
+                new UserDTO(
+                        UUID.randomUUID(),
+                        "Admin 2",
+                        "admin2@gmail.com",
+                        Role.ADMIN,
+                        "About admin 2",
+                        LocalDateTime.now(),
+                        true
+                )
+        );
 
+        // Act
         List<String> result = userRepository.findAdminsLogin();
 
+        // Assert
         assertThat(result)
                 .hasSize(2)
                 .containsExactlyInAnyOrder("admin1@gmail.com", "admin2@gmail.com")
@@ -60,6 +149,7 @@ class UserRepositoryTest {
     }
 
     private void createUser(UserDTO data) {
+        // Mock
         User user = new User(
                 null,
                 data.getFullName(),

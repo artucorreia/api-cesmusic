@@ -34,7 +34,7 @@ public class MailService {
 
             String template = getMailTemplate("templates/login-code-mail-template.html");
             template = template.replace("${fullName}", pendingUser.getFullName());
-            template = template.replace("${url}",WEBSITE_URL + "register/authenticate-code/" + pendingUser.getLoginCode());
+            template = template.replace("${url}",WEBSITE_URL + "register/authenticate-code?code=" + pendingUser.getLoginCode());
 
             helper.setText(
                     "Código de Validação:" + pendingUser.getLoginCode(),
@@ -61,7 +61,7 @@ public class MailService {
             String template = getMailTemplate("templates/new-user-mail-template.html");
             template = template.replace("${name}", newUser.getFullName());
             template = template.replace("${login}", newUser.getLogin());
-            template = template.replace("${url}", WEBSITE_URL + "admin/authenticate-user/" + newUser.getLogin());
+            template = template.replace("${url}", WEBSITE_URL + "admin/authenticate-user?id=" + newUser.getId());
 
             helper.setText(
                     "New user:\n" +

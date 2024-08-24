@@ -3,8 +3,6 @@ package com.blog.cesmusic.exceptions;
 import com.blog.cesmusic.exceptions.auth.*;
 import com.blog.cesmusic.exceptions.general.ResourceNotFoundException;
 import com.blog.cesmusic.exceptions.mail.MailSendingException;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -84,19 +82,6 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(InvalidEmailException.class)
-    public final ResponseEntity<ExceptionResponse> handleInvalidLoginExceptions(
-            Exception exception,
-            WebRequest request
-    ) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                LocalDateTime.now(),
-                exception.getMessage(),
-                request.getDescription(false)
-        );
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(LoginAlreadyUsedException.class)
     public final ResponseEntity<ExceptionResponse> handleLoginAlreadyUsedExceptions(
             Exception exception,
@@ -125,19 +110,6 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     @ExceptionHandler(InvalidLoginCodeException.class)
     public final ResponseEntity<ExceptionResponse> handleInvalidLoginCodeExceptions(
-            Exception exception,
-            WebRequest request
-    ) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                LocalDateTime.now(),
-                exception.getMessage(),
-                request.getDescription(false)
-        );
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(DataLengthException.class)
-    public final ResponseEntity<ExceptionResponse> handleDataLengthExceptions(
             Exception exception,
             WebRequest request
     ) {
