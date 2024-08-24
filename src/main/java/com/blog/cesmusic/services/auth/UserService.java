@@ -52,9 +52,11 @@ public class UserService {
 
         User entity = userFactory(data);
 
-        sendMailToAdmins(Mapper.parseObject(entity, UserDTO.class));
+        UserDTO user = create(entity);
+        
+        sendMailToAdmins(user);
 
-        return create(entity);
+        return user;
     }
 
     private UserDTO create(User entity) {

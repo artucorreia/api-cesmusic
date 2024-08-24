@@ -19,6 +19,6 @@ public interface PendingUserRepository extends JpaRepository<PendingUser, UUID> 
     Optional<PendingUser> findByLoginCode(String code);
 
     @Modifying
-    @Query("DELETE FROM PendingUser pu WHERE pu.createdAt < :expirationTime")
+    @Query("DELETE FROM PendingUser pu WHERE pu.createdAt <= :expirationTime")
     void deleteAllByCreatedAtBefore(@Param("expirationTime") LocalDateTime expirationTime);
 }
