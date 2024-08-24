@@ -22,6 +22,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "https://musical-blog-cesmac.vercel.app"})
 @RestController
 @RequestMapping("/auth")
@@ -106,14 +108,14 @@ public class AuthenticationController {
                     @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)
             }
     )
-    public ResponseEntity<PendingUserDTO> register(@RequestBody RegisterDTO data) {
+    public ResponseEntity<PendingUserDTO> register(@Valid @RequestBody RegisterDTO data) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(pendingUserService.register(data));
     }
 
     @PutMapping(
-            value = "/activate/{login}",
+            value = "/activate/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @Operation(
@@ -137,10 +139,10 @@ public class AuthenticationController {
                     @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content),
             }
     )
-    public ResponseEntity<UserDTO> acceptUser(@PathVariable String login) {
+    public ResponseEntity<UserDTO> acceptUser(@PathVariable UUID id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(userService.acceptUser(login));
+                .body(userService.acceptUser(id));
     }
 
     @PutMapping(

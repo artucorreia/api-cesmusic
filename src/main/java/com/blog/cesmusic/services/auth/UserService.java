@@ -2,6 +2,7 @@ package com.blog.cesmusic.services.auth;
 
 import com.blog.cesmusic.data.DTO.v1.auth.*;
 import com.blog.cesmusic.exceptions.auth.*;
+import com.blog.cesmusic.exceptions.general.ResourceNotFoundException;
 import com.blog.cesmusic.mapper.Mapper;
 import com.blog.cesmusic.model.Role;
 import com.blog.cesmusic.model.User;
@@ -12,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 @Service
@@ -23,6 +26,13 @@ public class UserService {
 
     @Autowired
     private MailService mailService;
+
+    private User findById(UUID id) {
+        logger.info("Finding user by id");
+
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No records found for this id"));
+    }
 
     public UserDetails findByLogin(String login) {
         logger.info("Finding user by login");
@@ -68,10 +78,10 @@ public class UserService {
         );
     }
 
-    public UserDTO acceptUser(String login) {
+    public UserDTO acceptUser(UUID id) {
         logger.info("Accepting a user");
 
-        User entity = Mapper.parseObject(findByLogin(login), User.class);
+        User entity = findById(id);
         if (entity.getActive()) throw new UserIsAlreadyActiveException("User is already active");
 
         entity.setActive(true);
